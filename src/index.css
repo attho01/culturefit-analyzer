@@ -1,0 +1,114 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Pretendard", "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand: #4F46E5;
+  --color-brand-light: #818CF8;
+  --color-brand-dark: #3730A3;
+  --color-brand-deep: #1E1B4B;
+  
+  --color-ink: #0F172A;
+  --color-ink-muted: #64748B;
+  --color-paper: #F8FAFC;
+  --color-paper-dark: #020617;
+  
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+}
+
+@layer base {
+  body {
+    @apply bg-paper text-ink font-sans selection:bg-brand/20 antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .dark body {
+    @apply bg-paper-dark text-slate-100;
+  }
+}
+
+@layer components {
+  .glass-header {
+    @apply sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50;
+  }
+
+  .card {
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl transition-all duration-300;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-2xl hover:shadow-brand/10 hover:border-brand/20;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-brand text-white font-bold rounded-xl transition-all duration-300 
+           hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98]
+           shadow-lg shadow-brand/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white dark:bg-slate-800 text-ink dark:text-white font-bold rounded-xl border border-slate-200 dark:border-slate-700 transition-all duration-300
+           hover:border-brand hover:text-brand hover:scale-[1.02] active:scale-[0.98] cursor-pointer;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 
+           focus:ring-2 focus:ring-brand/20 focus:border-brand outline-none transition-all;
+  }
+
+  .step-indicator {
+    @apply flex items-center justify-center w-8 h-8 rounded-full border-2 border-slate-200 dark:border-slate-800 text-sm font-bold transition-all;
+  }
+
+  .step-indicator.active {
+    @apply border-brand bg-brand text-white shadow-lg shadow-brand/20;
+  }
+
+  .step-indicator.complete {
+    @apply border-brand bg-brand/10 text-brand;
+  }
+
+  /* Distinctive UI Elements */
+  .rail-label {
+    @apply text-[10px] uppercase tracking-[0.2em] font-black text-ink-muted/50;
+  }
+
+  .bento-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand to-brand-light;
+  }
+  
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 dark:bg-slate-800 rounded-full;
+}
