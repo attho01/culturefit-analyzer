@@ -38,17 +38,31 @@ export default function APIKeyModal({ onSave, onClose }: APIKeyModalProps) {
       // Verification call
       const verifyAi = new GoogleGenAI({ apiKey: apiKey.trim() });
       await (verifyAi as any).models.generateContent({ 
-        model: "gemini-1.5-flash",
-        contents: [{ role: "user", parts: [{ text: "hi" }] }] 
+        model: "gemini-2.5-flash",
+        contents: "hi" 
       });
       
       onSave(apiKey.trim());
     } catch (err: any) {
       console.error(err);
-      if (err.message?.includes('API_KEY_INVALID') || err.message?.includes('invalid')) {
+      let readableMsg = err.message || '알 수 없는 오류';
+      try {
+        if (typeof readableMsg === 'string' && readableMsg.trim().startsWith('{')) {
+          const parsed = JSON.parse(readableMsg);
+          if (parsed.error && parsed.error.message) {
+            readableMsg = parsed.error.message;
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      if (readableMsg.includes('API_KEY_INVALID') || readableMsg.includes('invalid')) {
         setError("유효하지 않은 API Key입니다. 키를 다시 확인해주세요.");
+      } else if (readableMsg.includes('not found') || readableMsg.includes('NOT_FOUND')) {
+        setError("이 API 키로는 Gemini 모델(gemini-2.5-flash)에 접근할 수 없습니다. 권한이나 지역 제한을 확인해주세요.");
       } else {
-        setError(`API Key 승인 실패: ${err.message || '알 수 없는 오류'}`);
+        setError(`API Key 승인 실패: ${readableMsg}`);
       }
     } finally {
       setIsVerifying(false);

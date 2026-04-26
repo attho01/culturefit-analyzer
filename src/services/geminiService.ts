@@ -88,7 +88,7 @@ ${conditions.targetCompany ? `- 목표 특정 기업: ${conditions.targetCompany
 
     const callAI = async (useSearch: boolean) => {
       return await (ai as any).models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         contents: [{ role: "user", parts: [{ text: "지원자의 스토리뱅크(SB)와 가장 컬쳐핏이 잘 맞는 국내외 기업 5곳을 인재상 및 CEO 철학 기반으로 깊이 있게 비교 분석하여 JSON으로 출력하세요. 인용 태그([cite:X])는 절대 사용하지 마세요." }] }],
         config: {
           systemInstruction,
