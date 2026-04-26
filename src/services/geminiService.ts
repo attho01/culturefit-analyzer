@@ -202,8 +202,20 @@ ${conditions.targetCompany ? `- 목표 특정 기업: ${conditions.targetCompany
       appealPoint: c.appeal_point || "",
       caution: c.caution || ""
     }));
-  } catch (error) {
+  } catch (error: any) {
     console.error("Analysis failed:", error);
+    let readableMsg = error.message || "알 수 없는 오류가 발생했습니다.";
+    try {
+      if (typeof readableMsg === 'string' && readableMsg.trim().startsWith('{')) {
+        const parsed = JSON.parse(readableMsg);
+        if (parsed.error && parsed.error.message) {
+          readableMsg = parsed.error.message;
+        }
+      }
+    } catch (e) {
+      // Ignore parse error
+    }
+    error.message = readableMsg;
     throw error;
   }
 };
