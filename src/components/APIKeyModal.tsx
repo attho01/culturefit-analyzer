@@ -14,7 +14,8 @@ import {
   Eye, 
   EyeOff,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  X
 } from 'lucide-react';
 
 interface APIKeyModalProps {
@@ -60,7 +61,6 @@ export default function APIKeyModal({ onSave, onClose }: APIKeyModalProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onClick={onClose}
         className="absolute inset-0 bg-brand-deep/40 backdrop-blur-sm"
       />
       
@@ -70,7 +70,13 @@ export default function APIKeyModal({ onSave, onClose }: APIKeyModalProps) {
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
         className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[32px] shadow-2xl shadow-brand-deep/20 overflow-hidden"
       >
-        <div className="p-8 sm:p-12 space-y-8">
+        <div className="p-8 sm:p-12 space-y-8 relative">
+          <button 
+            onClick={onClose}
+            className="absolute top-6 right-6 p-2 text-slate-400 hover:text-ink dark:hover:text-white transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
           <div className="space-y-4 text-center">
             <h3 className="text-3xl font-black tracking-tight text-ink dark:text-white">
               Gemini API 키 입력

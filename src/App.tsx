@@ -226,6 +226,7 @@ export default function App() {
                       stories={stories}
                       userApiKey={userApiKey || undefined}
                       onComplete={handleStep3Complete}
+                      onRequestApiKeyChange={() => setShowApiKeyModal(true)}
                     />
                     {analysisResults.length > 0 && (
                       <motion.div 

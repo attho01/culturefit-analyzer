@@ -32,6 +32,7 @@ interface Step3Props {
   stories: STARStory[];
   userApiKey?: string;
   onComplete: (results: CompanyAnalysis[]) => void;
+  onRequestApiKeyChange?: () => void;
 }
 
 const LOADING_MESSAGES = [
@@ -56,7 +57,7 @@ const MICRO_LOGS = [
   "데이터 손실 방지 체크 루틴 수행"
 ];
 
-export default function Step3({ conditions, stories, userApiKey, onComplete }: Step3Props) {
+export default function Step3({ conditions, stories, userApiKey, onComplete, onRequestApiKeyChange }: Step3Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);
   const [microLogStep, setMicroLogStep] = useState(0);
@@ -64,9 +65,15 @@ export default function Step3({ conditions, stories, userApiKey, onComplete }: S
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'high' | 'low'>('high');
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
+    setIsLoading(true);
+    setError(null);
+    setLoadingStep(0);
+    setMicroLogStep(0);
+
     const timeoutId = setTimeout(() => {
       if (isMounted && isLoading) {
         setError("분석 시간이 너무 오래 걸립니다. 네트워크 상태를 확인하시거나 지원 기업 수를 줄여보세요.");
@@ -87,7 +94,7 @@ export default function Step3({ conditions, stories, userApiKey, onComplete }: S
           clearTimeout(timeoutId);
           console.error("Gemini Error:", err);
           const errorMsg = err?.message || "알 수 없는 오류가 발생했습니다.";
-          setError(`분석 실패: ${errorMsg}\n\n잠시 후 다시 시도하거나, 입력한 상위 3개 스토리 위주로 분석을 시도해보세요.`);
+          setError(`분석 실패: ${errorMsg}\n\n잠시 후 다시 시도하거나, 이전 단계로 이동하여 입력한 상위 3개 스토리 위주로 분석을 시도해보세요.`);
         }
       } finally {
         if (isMounted) {
@@ -115,7 +122,7 @@ export default function Step3({ conditions, stories, userApiKey, onComplete }: S
       clearInterval(interval);
       clearInterval(logInterval);
     };
-  }, [stories, conditions, userApiKey]);
+  }, [stories, conditions, userApiKey, retryCount]);
 
   const sortedData = useMemo(() => {
     let data = [...results];
@@ -181,11 +188,19 @@ export default function Step3({ conditions, stories, userApiKey, onComplete }: S
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
           <button 
-            onClick={() => window.location.reload()}
+            onClick={() => setRetryCount(prev => prev + 1)}
             className="btn-primary w-full sm:w-auto px-10 py-5 text-lg shadow-xl shadow-brand/20"
           >
             다시 시도하기
           </button>
+          {onRequestApiKeyChange && (
+            <button 
+              onClick={onRequestApiKeyChange}
+              className="btn-secondary w-full sm:w-auto px-10 py-5 text-lg"
+            >
+              API 키 변경하기
+            </button>
+          )}
           <button 
             onClick={() => window.open('https://aistudio.google.com/app/apikey', '_blank')}
             className="btn-secondary w-full sm:w-auto px-10 py-5 text-lg"
