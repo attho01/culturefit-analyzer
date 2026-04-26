@@ -102,7 +102,7 @@ ${text.substring(0, 10000)}
     while (retryCount <= maxRetries) {
       try {
         const response = await ai.models.generateContent({
-          model: "gemini-1.5-flash",
+          model: "gemini-2.5-flash",
           contents: [{ role: "user", parts: [{ text: prompt }] }],
           config: { responseMimeType: "application/json" }
         });
